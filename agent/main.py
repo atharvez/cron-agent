@@ -17,7 +17,6 @@ def run_agent():
         print("No Python files found")
         return
 
-    # 🔥 ONLY ONE API CALL
     task = generate_plan(summary)
     print("Plan:", task)
 
