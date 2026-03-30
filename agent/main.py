@@ -1,9 +1,8 @@
-import os
 from analyzer import analyze_repo, get_python_files
-from brain import generate_task
-from editor import apply_ai_edit
+from brain import generate_plan
+from editor import apply_simple_edit
 from git_manager import setup_git, commit, push
-from utils import validate, revert
+from utils import validate
 
 REPO_PATH = "."
 
@@ -15,28 +14,22 @@ def run_agent():
     files = get_python_files(REPO_PATH)
 
     if not files:
-        print("No Python files found.")
+        print("No Python files found")
         return
 
+    # 🔥 ONLY ONE API CALL
+    task = generate_plan(summary)
+    print("Plan:", task)
+
     for i in range(3):
-        print(f"\n--- Commit {i+1} ---")
+        print(f"Commit {i+1}")
 
-        task = generate_task(summary)
-        print("Task:", task)
+        file = files[i % len(files)]
 
-        target_file = files[i % len(files)]
+        success = apply_simple_edit(file)
 
-        success = apply_ai_edit(target_file)
-
-        if not success:
-            print("Edit failed, skipping...")
-            continue
-
-        if validate():
-            commit(REPO_PATH, f"AI Task {i+1}: {task}")
-        else:
-            print("Validation failed. Reverting...")
-            revert(REPO_PATH)
+        if success and validate():
+            commit(REPO_PATH, f"{task} (part {i+1})")
 
     push(REPO_PATH)
 

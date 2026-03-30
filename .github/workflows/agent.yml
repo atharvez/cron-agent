@@ -5,7 +5,7 @@ permissions:
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # daily
+    - cron: '0 5 * * *'   # daily
   workflow_dispatch:
 
 jobs:
@@ -13,17 +13,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install deps
         run: |
-          pip install -r requirements.txt
+          pip install --upgrade pip
+          pip install --no-cache-dir -r requirements.txt
 
       - name: Run agent
         env:
@@ -31,6 +32,6 @@ jobs:
         run: |
           python agent/main.py
 
-      - name: Push changes
+      - name: Push
         run: |
           git push

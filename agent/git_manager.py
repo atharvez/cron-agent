@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 
 
 def setup_git(repo_path):
