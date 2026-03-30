@@ -1,0 +1,36 @@
+name: AI Dev Agent
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: '0 5 * * *'  # daily
+  workflow_dispatch:
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run agent
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python agent/main.py
+
+      - name: Push changes
+        run: |
+          git push
