@@ -16,7 +16,7 @@ def generate_task(repo_summary):
     """
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model="gemini-3-flash-preview",
         contents=prompt
     )
 
